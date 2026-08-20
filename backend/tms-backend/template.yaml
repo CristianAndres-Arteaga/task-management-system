@@ -1,0 +1,270 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  tms-backend
+
+  Sample SAM Template for tms-backend
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    LoggingConfig:
+      LogFormat: JSON
+Resources:
+  CreateTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: create-task/
+      Description: "Se creara una nueva tarea para el usuario autenticado"
+      Handler: app.lambdaHandler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TmsTable
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !GetAtt TmsTable.Arn
+      Events:
+        CreateTask:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref TmsHttpApi
+            Path: /tasks
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+  ListTasksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: list-tasks/
+      Handler: app.lambdaHandler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TmsTable
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+              Resource: !GetAtt TmsTable.Arn
+      Events:
+        ListTasks:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref TmsHttpApi
+            Path: /tasks
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+  UpdateTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: update-task/
+      Handler: app.lambdaHandler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TmsTable
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !GetAtt TmsTable.Arn
+      Events:
+        UpdateTask:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref TmsHttpApi
+            Path: /tasks/{taskId}
+            Method: PATCH
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+  DeleteTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: delete-task/
+      Handler: app.lambdaHandler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TmsTable
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:DeleteItem
+              Resource: !GetAtt TmsTable.Arn
+      Events:
+        DeleteTask:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref TmsHttpApi
+            Path: /tasks/{taskId}
+            Method: DELETE
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+  TmsHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+      CorsConfiguration:
+        AllowOrigins:
+          - "http://localhost:5173"
+        AllowMethods:
+          - GET
+          - POST
+          - PATCH
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+      Auth:
+        Authorizers:
+          CognitoAuthorizer:
+            JwtConfiguration:
+              issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${TmsUserPool}"
+              audience:
+                - !Ref TmsUserPoolClient
+            IdentitySource: "$request.header.Authorization"
+        DefaultAuthorizer: CognitoAuthorizer
+
+  TmsUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: tms-user-pool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      MfaConfiguration: "OFF"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          TemporaryPasswordValidityDays: 7
+  TmsUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: tms-frontend
+      UserPoolId: !Ref TmsUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: ENABLED
+
+  TmsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: tms-table 
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S 
+        - AttributeName: SK
+          AttributeType: S 
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+  PostConfirmationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: post-confirmation/
+      Handler: app.lambdaHandler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TmsTable
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !GetAtt TmsTable.Arn
+      Events:
+        PostConfirmation:
+          Type: Cognito
+          Properties:
+            UserPool: !Ref TmsUserPool
+            Trigger: PostConfirmation
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - app.ts
+Outputs:
+  HttpApiId:
+    Description: "ID de la HTTP API"
+    Value: !Ref TmsHttpApi
+
+  HttpApiEndpoint:
+    Description: "URL base de la HTTP API"
+    Value: !Sub "https://${TmsHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+
+  UserPoolId:
+    Description: "ID del Cognito User Pool"
+    Value: !Ref TmsUserPool
+
+  UserPoolClientId:
+    Description: "ID del App Client de Cognito"
+    Value: !Ref TmsUserPoolClient
+
+  TableName:
+    Description: "Nombre de la tabla DynamoDB"
+    Value: !Ref TmsTable
+
+  PostConfirmationFunctionArn:
+    Description: "ARN de la Lambda PostConfirmation"
+    Value: !GetAtt PostConfirmationFunction.Arn
+

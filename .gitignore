@@ -1,0 +1,20 @@
+gitignore
+# AWS SAM
+**/.aws-sam/
+backend/tms-backend/samconfig.toml.bak
+
+# Node / npm (aplica a ambas carpetas si en algún momento el backend tiene deps propias)
+node_modules/
+tms-frontend/dist/
+tms-frontend/node_modules/
+
+# Variables de entorno / secretos
+.env
+.env.local
+*.pem
+*.key
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
