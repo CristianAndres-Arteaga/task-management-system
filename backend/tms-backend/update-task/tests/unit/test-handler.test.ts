@@ -1,65 +1,59 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { mockClient } from 'aws-sdk-client-mock';
+import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { lambdaHandler } from '../../app';
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it, beforeEach } from '@jest/globals';
 
-describe('Unit test for app handler', function () {
-    it('verifies successful response', async () => {
-        const event: APIGatewayProxyEvent = {
-            httpMethod: 'get',
-            body: '',
-            headers: {},
-            isBase64Encoded: false,
-            multiValueHeaders: {},
-            multiValueQueryStringParameters: {},
-            path: '/hello',
-            pathParameters: {},
-            queryStringParameters: {},
-            requestContext: {
-                accountId: '123456789012',
-                apiId: '1234',
-                authorizer: {},
-                httpMethod: 'get',
-                identity: {
-                    accessKey: '',
-                    accountId: '',
-                    apiKey: '',
-                    apiKeyId: '',
-                    caller: '',
-                    clientCert: {
-                        clientCertPem: '',
-                        issuerDN: '',
-                        serialNumber: '',
-                        subjectDN: '',
-                        validity: { notAfter: '', notBefore: '' },
-                    },
-                    cognitoAuthenticationProvider: '',
-                    cognitoAuthenticationType: '',
-                    cognitoIdentityId: '',
-                    cognitoIdentityPoolId: '',
-                    principalOrgId: '',
-                    sourceIp: '',
-                    user: '',
-                    userAgent: '',
-                    userArn: '',
-                },
-                path: '/hello',
-                protocol: 'HTTP/1.1',
-                requestId: 'c6af9ac6-7b61-11e6-9a41-93e8deadbeef',
-                requestTimeEpoch: 1428582896000,
-                resourceId: '123456',
-                resourcePath: '/hello',
-                stage: 'dev',
-            },
-            resource: '',
-            stageVariables: {},
+const ddbMock = mockClient(DynamoDBDocumentClient);
+
+const baseEvent = {
+    requestContext: {
+        authorizer: { jwt: { claims: { sub: 'test-sub-1234' } } },
+    },
+    pathParameters: { taskId: 'task-abc' },
+};
+
+describe('Unit test for update-task handler', function () {
+    beforeEach(() => {
+        ddbMock.reset();
+    });
+
+    it('updates the task and returns 200 with the new attributes', async () => {
+        const updatedTask = {
+            PK: 'USER#test-sub-1234',
+            SK: 'TASK#task-abc',
+            title: 'Título actualizado',
+            status: 'en progreso',
         };
-        const result: APIGatewayProxyResult = await lambdaHandler(event);
+        ddbMock.on(UpdateCommand).resolves({ Attributes: updatedTask });
+
+        const event = {
+            ...baseEvent,
+            body: JSON.stringify({ title: 'Título actualizado', status: 'en progreso' }),
+        };
+        const result = await lambdaHandler(event);
 
         expect(result.statusCode).toEqual(200);
-        expect(result.body).toEqual(
-            JSON.stringify({
-                message: 'hello world',
-            }),
-        );
+        expect(JSON.parse(result.body)).toEqual(updatedTask);
+    });
+
+    it('returns 400 when no valid fields are sent', async () => {
+        const event = { ...baseEvent, body: JSON.stringify({ notAllowed: 'x' }) };
+
+        const result = await lambdaHandler(event);
+
+        expect(result.statusCode).toEqual(400);
+        expect(ddbMock.commandCalls(UpdateCommand)).toHaveLength(0);
+    });
+
+    it('returns 404 when the task does not exist', async () => {
+        const error = Object.assign(new Error('conditional check failed'), {
+            name: 'ConditionalCheckFailedException',
+        });
+        ddbMock.on(UpdateCommand).rejects(error);
+
+        const event = { ...baseEvent, body: JSON.stringify({ title: 'x' }) };
+        const result = await lambdaHandler(event);
+
+        expect(result.statusCode).toEqual(404);
     });
 });
