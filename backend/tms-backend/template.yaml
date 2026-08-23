@@ -5,6 +5,11 @@ Description: >
 
   Sample SAM Template for tms-backend
 
+Parameters:
+  AlertEmail:
+    Type: String
+    Description: Email address to receive backend alerts
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -275,6 +280,18 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${PostConfirmationFunction}"
       RetentionInDays: 14
 
+  TmsAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: tms-backend-alerts
+
+  TmsAlertsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref TmsAlertsTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+  
 Outputs:
   HttpApiId:
     Description: "ID de la HTTP API"
