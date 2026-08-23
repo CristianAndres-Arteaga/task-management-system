@@ -244,6 +244,37 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - app.ts
+
+  CreateTaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${CreateTaskFunction}"
+      RetentionInDays: 14
+
+  ListTasksLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ListTasksFunction}"
+      RetentionInDays: 14
+
+  UpdateTaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${UpdateTaskFunction}"
+      RetentionInDays: 14
+
+  DeleteTaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${DeleteTaskFunction}"
+      RetentionInDays: 14
+
+  PostConfirmationLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${PostConfirmationFunction}"
+      RetentionInDays: 14
+
 Outputs:
   HttpApiId:
     Description: "ID de la HTTP API"
