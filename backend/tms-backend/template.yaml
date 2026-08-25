@@ -206,13 +206,13 @@ Resources:
   TmsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: tms-table 
+      TableName: tms-table
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: PK
-          AttributeType: S 
+          AttributeType: S
         - AttributeName: SK
-          AttributeType: S 
+          AttributeType: S
       KeySchema:
         - AttributeName: PK
           KeyType: HASH
@@ -284,7 +284,6 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: tms-backend-alerts
-  
 
   TmsAlertsSubscription:
     Type: AWS::SNS::Subscription
@@ -427,7 +426,7 @@ Resources:
       TreatMissingData: notBreaching
       AlarmActions:
         - !Ref TmsAlertsTopic
-        
+
 Outputs:
   HttpApiId:
     Description: "ID de la HTTP API"
@@ -452,4 +451,3 @@ Outputs:
   PostConfirmationFunctionArn:
     Description: "ARN de la Lambda PostConfirmation"
     Value: !GetAtt PostConfirmationFunction.Arn
-
