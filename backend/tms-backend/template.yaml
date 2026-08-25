@@ -427,6 +427,82 @@ Resources:
       AlarmActions:
         - !Ref TmsAlertsTopic
 
+
+  TmsDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: tms-backend-dashboard
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "x": 0, "y": 0, "width": 12, "height": 6,
+              "properties": {
+                "title": "Lambda Errors",
+                "metrics": [
+                  ["AWS/Lambda", "Errors", "FunctionName", "${CreateTaskFunction}"],
+                  ["AWS/Lambda", "Errors", "FunctionName", "${ListTasksFunction}"],
+                  ["AWS/Lambda", "Errors", "FunctionName", "${UpdateTaskFunction}"],
+                  ["AWS/Lambda", "Errors", "FunctionName", "${DeleteTaskFunction}"],
+                  ["AWS/Lambda", "Errors", "FunctionName", "${PostConfirmationFunction}"]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12, "y": 0, "width": 12, "height": 6,
+              "properties": {
+                "title": "Lambda Duration (Average)",
+                "metrics": [
+                  ["AWS/Lambda", "Duration", "FunctionName", "${CreateTaskFunction}"],
+                  ["AWS/Lambda", "Duration", "FunctionName", "${ListTasksFunction}"],
+                  ["AWS/Lambda", "Duration", "FunctionName", "${UpdateTaskFunction}"],
+                  ["AWS/Lambda", "Duration", "FunctionName", "${DeleteTaskFunction}"],
+                  ["AWS/Lambda", "Duration", "FunctionName", "${PostConfirmationFunction}"]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 0, "y": 6, "width": 12, "height": 6,
+              "properties": {
+                "title": "API Gateway - Requests & Errors",
+                "metrics": [
+                  ["AWS/ApiGateway", "Count", "ApiId", "${TmsHttpApi}", "Stage", "prod"],
+                  ["AWS/ApiGateway", "4xx", "ApiId", "${TmsHttpApi}", "Stage", "prod"],
+                  ["AWS/ApiGateway", "5xx", "ApiId", "${TmsHttpApi}", "Stage", "prod"]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12, "y": 6, "width": 12, "height": 6,
+              "properties": {
+                "title": "DynamoDB - Capacity & Throttles",
+                "metrics": [
+                  ["AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${TmsTable}"],
+                  ["AWS/DynamoDB", "ConsumedWriteCapacityUnits", "TableName", "${TmsTable}"],
+                  ["AWS/DynamoDB", "ThrottledRequests", "TableName", "${TmsTable}"]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}"
+              }
+            }
+          ]
+        }
+
+
 Outputs:
   HttpApiId:
     Description: "ID de la HTTP API"
