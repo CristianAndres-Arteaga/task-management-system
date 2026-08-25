@@ -427,6 +427,7 @@ Resources:
       AlarmActions:
         - !Ref TmsAlertsTopic
 
+
   TmsDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
@@ -500,6 +501,7 @@ Resources:
             }
           ]
         }
+
 
 Outputs:
   HttpApiId:
