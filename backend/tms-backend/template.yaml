@@ -206,13 +206,13 @@ Resources:
   TmsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: tms-table 
+      TableName: tms-table
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: PK
-          AttributeType: S 
+          AttributeType: S
         - AttributeName: SK
-          AttributeType: S 
+          AttributeType: S
       KeySchema:
         - AttributeName: PK
           KeyType: HASH
@@ -291,7 +291,142 @@ Resources:
       TopicArn: !Ref TmsAlertsTopic
       Protocol: email
       Endpoint: !Ref AlertEmail
-  
+
+  CreateTaskErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-create-task-errors
+      AlarmDescription: "Errores en CreateTaskFunction"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref CreateTaskFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  ListTasksErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-list-tasks-errors
+      AlarmDescription: "Errores en ListTasksFunction"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ListTasksFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  UpdateTaskErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-update-task-errors
+      AlarmDescription: "Errores en UpdateTaskFunction"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref UpdateTaskFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  DeleteTaskErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-delete-task-errors
+      AlarmDescription: "Errores en DeleteTaskFunction"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref DeleteTaskFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  PostConfirmationErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-post-confirmation-errors
+      AlarmDescription: "Errores en PostConfirmationFunction"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref PostConfirmationFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  ApiGateway5xxAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-api-5xx-errors
+      AlarmDescription: "Errores 5xx en la HTTP API"
+      Namespace: AWS/ApiGateway
+      MetricName: 5xx
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref TmsHttpApi
+        - Name: Stage
+          Value: prod
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
+  DynamoDbThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: tms-dynamodb-throttles
+      AlarmDescription: "Throttling en TmsTable"
+      Namespace: AWS/DynamoDB
+      MetricName: ThrottledRequests
+      Dimensions:
+        - Name: TableName
+          Value: !Ref TmsTable
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref TmsAlertsTopic
+
 Outputs:
   HttpApiId:
     Description: "ID de la HTTP API"
@@ -316,4 +451,3 @@ Outputs:
   PostConfirmationFunctionArn:
     Description: "ARN de la Lambda PostConfirmation"
     Value: !GetAtt PostConfirmationFunction.Arn
-
