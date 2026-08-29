@@ -1,11 +1,15 @@
 import { useState } from "react";
 import type { CreateTaskData } from "../types/task";
+import { Input } from "./ui/Input";
+import { Textarea } from "./ui/Textarea";
+import { Button } from "./ui/Button";
 
 interface TaskFormProps {
   onCreate: (data: CreateTaskData) => Promise<void>;
+  onCancel?: () => void;
 }
 
-export function TaskForm({ onCreate }: TaskFormProps) {
+export function TaskForm({ onCreate, onCancel }: TaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +23,7 @@ export function TaskForm({ onCreate }: TaskFormProps) {
       await onCreate({ title, description });
       setTitle("");
       setDescription("");
+      onCancel?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al crear la tarea");
     } finally {
@@ -27,29 +32,32 @@ export function TaskForm({ onCreate }: TaskFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
-      <input
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 mb-6 bg-surface border border-border rounded-xl p-6 shadow-sm"
+    >
+      <Input
         type="text"
         placeholder="Título"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
-        className="border rounded px-3 py-2"
       />
-      <textarea
+      <Textarea
         placeholder="Descripción (opcional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="border rounded px-3 py-2"
+        rows={3}
       />
-      {error && <p className="text-red-600 text-sm">{error}</p>}
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-blue-600 text-white rounded px-4 py-2 disabled:opacity-50"
-      >
+      {error && <p className="text-error text-sm">{error}</p>}
+      <Button type="submit" isLoading={loading}>
         {loading ? "Creando..." : "Crear tarea"}
-      </button>
+      </Button>
+      {onCancel && (
+        <Button type="button" variant="secondary" onClick={onCancel}>
+          Cancelar
+        </Button>
+      )}
     </form>
   );
 }

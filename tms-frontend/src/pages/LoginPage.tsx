@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { AuthLayout } from "../components/AuthLayout";
+import { Input } from "../components/ui/Input";
+import { Button } from "../components/ui/Button";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -26,22 +29,29 @@ export function LoginPage() {
   }
 
   return (
-    <div>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
+    <AuthLayout
+      title="Iniciar sesión"
+      footer={
+        <>
+          ¿No tenés cuenta?{" "}
+          <Link to="/register" className="text-primary hover:underline">
+            Registrarse
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">
+            Email
+          </label>
+          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
-          <label htmlFor="password">Contraseña</label>
-          <input
+          <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-1">
+            Contraseña
+          </label>
+          <Input
             id="password"
             type="password"
             value={password}
@@ -49,14 +59,11 @@ export function LoginPage() {
             required
           />
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
+        {error && <p className="text-error text-sm">{error}</p>}
+        <Button type="submit" isLoading={loading}>
           {loading ? "Iniciando sesión..." : "Iniciar sesión"}
-        </button>
+        </Button>
       </form>
-      <p>
-        ¿No tenés cuenta? <Link to="/register">Registrarse</Link>
-      </p>
-    </div>
+    </AuthLayout>
   );
 }
