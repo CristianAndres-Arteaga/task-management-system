@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from '../hooks/useAuth';
 import * as tasksApi from "../api/tasks";
 import type { Task, CreateTaskData, UpdateTaskData } from "../types/task";
 import { KanbanBoard } from "../components/kanban/KanbanBoard";

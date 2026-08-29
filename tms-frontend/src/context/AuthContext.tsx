@@ -1,38 +1,25 @@
 import {
-  createContext,
-  useContext,
   useState,
   useEffect,
 } from "react";
 import type { ReactNode } from "react";
+import type { CognitoUserSession } from "amazon-cognito-identity-js";
 import * as authApi from "../api/auth";
-import type { AuthUser, LoginData, SignUpData } from "../types/auth";
-
-interface AuthContextType {
-  user: AuthUser | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  signUp: (data: SignUpData) => Promise<void>;
-  confirmSignUp: (email: string, code: string) => Promise<void>;
-  login: (data: LoginData) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import type { AuthUser, LoginData } from "../types/auth";
+import { AuthContext, type AuthContextType } from "./auth-context";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!authApi.userPool.getCurrentUser());
 
   useEffect(() => {
     const cognitoUser = authApi.userPool.getCurrentUser();
 
     if (!cognitoUser) {
-      setLoading(false);
       return;
     }
 
-    cognitoUser.getSession((err: Error | null, session: any) => {
+    cognitoUser.getSession((err: Error | null, session: CognitoUserSession | null) => {
       if (err || !session || !session.isValid()) {
         setUser(null);
         setLoading(false);
@@ -67,12 +54,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
   );
-}
-
-export function useAuth(): AuthContextType {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth debe usarse dentro de un AuthProvider");
-  }
-  return context;
 }
