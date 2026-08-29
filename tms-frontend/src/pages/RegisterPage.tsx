@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signUp } from "../api/auth";
+import { AuthLayout } from "../components/AuthLayout";
+import { Input } from "../components/ui/Input";
+import { Button } from "../components/ui/Button";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -32,22 +35,29 @@ export function RegisterPage() {
   }
 
   return (
-    <div>
-      <h1>Registro</h1>
-      <form onSubmit={handleSubmit}>
+    <AuthLayout
+      title="Registro"
+      footer={
+        <>
+          ¿Ya tenés cuenta?{" "}
+          <Link to="/login" className="text-primary hover:underline">
+            Iniciar sesión
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">
+            Email
+          </label>
+          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
-          <label htmlFor="password">Contraseña</label>
-          <input
+          <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-1">
+            Contraseña
+          </label>
+          <Input
             id="password"
             type="password"
             value={password}
@@ -56,8 +66,10 @@ export function RegisterPage() {
           />
         </div>
         <div>
-          <label htmlFor="confirmPassword">Confirmar contraseña</label>
-          <input
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-text-secondary mb-1">
+            Confirmar contraseña
+          </label>
+          <Input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
@@ -65,14 +77,11 @@ export function RegisterPage() {
             required
           />
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
+        {error && <p className="text-error text-sm">{error}</p>}
+        <Button type="submit" isLoading={loading}>
           {loading ? "Registrando..." : "Registrarse"}
-        </button>
+        </Button>
       </form>
-      <p>
-        ¿Ya tenés cuenta? <Link to="/login">Iniciar sesión</Link>
-      </p>
-    </div>
+    </AuthLayout>
   );
 }

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from '../hooks/useAuth';
 import * as tasksApi from "../api/tasks";
 import type { Task, CreateTaskData, UpdateTaskData } from "../types/task";
-import { TaskForm } from "../components/TaskForm";
-import { TaskList } from "../components/TaskList";
+import { KanbanBoard } from "../components/kanban/KanbanBoard";
+import { Button } from "../components/ui/Button";
 
 export function TasksPage() {
   const { user, logout } = useAuth();
@@ -35,23 +35,26 @@ export function TasksPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Mis tareas</h1>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">{user?.email}</span>
-          <button onClick={logout} className="border rounded px-3 py-1">
-            Cerrar sesión
-          </button>
+    <div>
+      <header className="bg-surface border-b border-border">
+        <div className="px-6 md:px-10 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-text-primary">Mis tareas</h1>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-text-secondary">{user?.email}</span>
+            <Button variant="secondary" onClick={logout}>
+              Cerrar sesión
+            </Button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <TaskForm onCreate={handleCreate} />
-
-      {loading && <p>Cargando tareas...</p>}
-      {error && <p className="text-red-600">{error}</p>}
-      {!loading && !error && (
-        <TaskList tasks={tasks} onUpdate={handleUpdate} onDelete={handleDelete} />
-      )}
+      <main className="px-6 md:px-10 py-6">
+        {loading && <p className="text-text-secondary">Cargando tareas...</p>}
+        {error && <p className="text-error">{error}</p>}
+        {!loading && !error && (
+          <KanbanBoard tasks={tasks} onCreate={handleCreate} onUpdate={handleUpdate} onDelete={handleDelete} />
+        )}
+      </main>
     </div>
-  );                                                                                                                                                                                  }
+  );
+}

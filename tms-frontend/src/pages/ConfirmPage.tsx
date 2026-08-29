@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { confirmSignUp } from "../api/auth";
+import { AuthLayout } from "../components/AuthLayout";
+import { Input } from "../components/ui/Input";
+import { Button } from "../components/ui/Button";
 
 export function ConfirmPage() {
   const navigate = useNavigate();
@@ -27,37 +30,35 @@ export function ConfirmPage() {
   }
 
   return (
-    <div>
-      <h1>Confirmar cuenta</h1>
-      <form onSubmit={handleSubmit}>
+    <AuthLayout
+      title="Confirmar cuenta"
+      footer={
+        <>
+          ¿Ya confirmaste?{" "}
+          <Link to="/login" className="text-primary hover:underline">
+            Iniciar sesión
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">
+            Email
+          </label>
+          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
-          <label htmlFor="code">Código de confirmación</label>
-          <input
-            id="code"
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            required
-          />
+          <label htmlFor="code" className="block text-sm font-medium text-text-secondary mb-1">
+            Código de confirmación
+          </label>
+          <Input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} required />
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
+        {error && <p className="text-error text-sm">{error}</p>}
+        <Button type="submit" isLoading={loading}>
           {loading ? "Confirmando..." : "Confirmar"}
-        </button>
+        </Button>
       </form>
-      <p>
-        ¿Ya confirmaste? <Link to="/login">Iniciar sesión</Link>
-      </p>
-    </div>
+    </AuthLayout>
   );
 }
