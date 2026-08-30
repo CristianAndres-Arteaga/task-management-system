@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 980" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-dashed" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/>
+    </marker>
+    <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.14"/>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0F172A" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="980" fill="#F8FAFC"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1800" height="80" fill="#0F172A"/>
+  <text x="40" y="34" font-size="21" font-weight="700" fill="#FFFFFF">Task Management System</text>
+  <text x="40" y="58" font-size="13" fill="#94A3B8">Arquitectura AWS Serverless — Single-table DynamoDB · HTTP API + Cognito JWT · CI/CD con GitHub Actions (OIDC)</text>
+
+  <!-- AWS Cloud boundary -->
+  <rect x="210" y="100" width="1350" height="840" rx="14" fill="#EFF3F8" stroke="#B9C4D3" stroke-width="1.6" stroke-dasharray="7,5"/>
+  <text x="234" y="126" font-size="13" font-weight="700" fill="#64748B" letter-spacing="0.5">AWS CLOUD — us-east-2</text>
+
+  <!-- Usuario -->
+  <g filter="url(#cardShadow)">
+    <rect x="30" y="480" width="150" height="100" rx="12" fill="#334155"/>
+  </g>
+  <circle cx="105" cy="513" r="12" fill="none" stroke="#E2E8F0" stroke-width="2.4"/>
+  <path d="M87,552 a18,16 0 0 1 36,0" fill="none" stroke="#E2E8F0" stroke-width="2.4"/>
+  <text x="105" y="503" font-size="0" />
+  <text x="105" y="605" font-size="0" />
+  <text x="105" y="500" font-size="0"/>
+  <text x="105" y="568" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">Usuario</text>
+  <text x="105" y="596" font-size="0"/>
+  <text x="105" y="491" font-size="0"/>
+
+  <!-- ===================================================================== -->
+  <!-- LANE 1 — FRONTEND HOSTING -->
+  <rect x="240" y="130" width="1300" height="155" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1.4"/>
+  <rect x="240" y="130" width="6" height="155" fill="#7C3AED"/>
+  <text x="264" y="152" font-size="12.5" font-weight="700" fill="#6D28D9" letter-spacing="0.4">FRONTEND HOSTING</text>
+
+  <g filter="url(#softShadow)"><rect x="270" y="165" width="230" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="270" y="165" width="230" height="5" rx="2.5" fill="#7C3AED"/>
+  <circle cx="300" cy="200" r="17" fill="#7C3AED"/>
+  <text x="300" y="205" font-size="10.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">CF</text>
+  <text x="326" y="203" font-size="14" font-weight="700" fill="#1E293B">CloudFront</text>
+  <text x="300" y="240" font-size="11.5" fill="#64748B">CDN global + terminación HTTPS</text>
+
+  <g filter="url(#softShadow)"><rect x="560" y="165" width="250" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="560" y="165" width="250" height="5" rx="2.5" fill="#7C3AED"/>
+  <circle cx="590" cy="200" r="17" fill="#7C3AED"/>
+  <text x="590" y="205" font-size="10.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">S3</text>
+  <text x="616" y="199" font-size="14" font-weight="700" fill="#1E293B">S3 — privado</text>
+  <text x="590" y="228" font-size="11.5" fill="#64748B">Build estático (Vite + React)</text>
+  <text x="590" y="245" font-size="11.5" fill="#64748B">Acceso solo vía OAC</text>
+
+  <!-- ===================================================================== -->
+  <!-- LANE 2 — AUTENTICACIÓN -->
+  <rect x="240" y="300" width="1300" height="155" rx="10" fill="#FEF2F2" stroke="#FECACA" stroke-width="1.4"/>
+  <rect x="240" y="300" width="6" height="155" fill="#DC2626"/>
+  <text x="264" y="322" font-size="12.5" font-weight="700" fill="#B91C1C" letter-spacing="0.4">AUTENTICACIÓN</text>
+
+  <g filter="url(#softShadow)"><rect x="270" y="335" width="250" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="270" y="335" width="250" height="5" rx="2.5" fill="#DC2626"/>
+  <circle cx="300" cy="370" r="17" fill="#DC2626"/>
+  <text x="300" y="375" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">CG</text>
+  <text x="326" y="373" font-size="14" font-weight="700" fill="#1E293B">Cognito User Pool</text>
+  <text x="300" y="404" font-size="11.5" fill="#64748B">SRP auth · sin MFA</text>
+  <text x="300" y="420" font-size="11.5" fill="#64748B">PreventUserExistenceErrors</text>
+
+  <g filter="url(#softShadow)"><rect x="580" y="335" width="230" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="580" y="335" width="230" height="5" rx="2.5" fill="#EA580C"/>
+  <circle cx="610" cy="370" r="17" fill="#EA580C"/>
+  <text x="610" y="376" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">λ</text>
+  <text x="636" y="368" font-size="13.5" font-weight="700" fill="#1E293B">PostConfirmation</text>
+  <text x="610" y="404" font-size="11.5" fill="#64748B">Trigger de Cognito</text>
+  <text x="610" y="420" font-size="11.5" fill="#64748B">Crea el perfil del usuario</text>
+
+  <!-- ===================================================================== -->
+  <!-- LANE 3 — API & LÓGICA DE NEGOCIO -->
+  <rect x="240" y="470" width="1300" height="175" rx="10" fill="#FDF2F8" stroke="#FBCFE8" stroke-width="1.4"/>
+  <rect x="240" y="470" width="6" height="175" fill="#DB2777"/>
+  <text x="264" y="492" font-size="12.5" font-weight="700" fill="#BE185D" letter-spacing="0.4">API &amp; LÓGICA DE NEGOCIO</text>
+
+  <g filter="url(#softShadow)"><rect x="270" y="505" width="250" height="110" rx="10" fill="#FFFFFF"/></g>
+  <rect x="270" y="505" width="250" height="5" rx="2.5" fill="#DB2777"/>
+  <circle cx="300" cy="542" r="17" fill="#DB2777"/>
+  <text x="300" y="547" font-size="9.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">API</text>
+  <text x="326" y="540" font-size="13.5" font-weight="700" fill="#1E293B">HTTP API Gateway</text>
+  <text x="300" y="572" font-size="11.5" fill="#64748B">Cognito JWT Authorizer</text>
+  <text x="300" y="588" font-size="11.5" fill="#64748B">Stage: prod</text>
+
+  <g filter="url(#softShadow)"><rect x="580" y="505" width="250" height="110" rx="10" fill="#FFFFFF"/></g>
+  <rect x="580" y="505" width="250" height="5" rx="2.5" fill="#EA580C"/>
+  <circle cx="610" cy="542" r="17" fill="#EA580C"/>
+  <text x="610" y="548" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">λ</text>
+  <text x="636" y="540" font-size="13.5" font-weight="700" fill="#1E293B">Lambdas CRUD</text>
+  <text x="610" y="572" font-size="11.5" fill="#64748B">create · list · update · delete</text>
+  <text x="610" y="588" font-size="11.5" fill="#64748B">1 función por operación</text>
+
+  <g filter="url(#softShadow)"><rect x="890" y="495" width="260" height="130" rx="10" fill="#FFFFFF"/></g>
+  <rect x="890" y="495" width="260" height="5" rx="2.5" fill="#2563EB"/>
+  <circle cx="920" cy="533" r="17" fill="#2563EB"/>
+  <text x="920" y="538" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">DB</text>
+  <text x="946" y="531" font-size="13.5" font-weight="700" fill="#1E293B">DynamoDB</text>
+  <text x="920" y="562" font-size="11.5" fill="#64748B">Tabla única · PK/SK</text>
+  <text x="920" y="578" font-size="11.5" fill="#64748B">On-Demand capacity</text>
+  <text x="920" y="594" font-size="11.5" fill="#64748B">Sin GSI</text>
+
+  <!-- Legend card (floating, upper-right empty column) -->
+  <g filter="url(#cardShadow)"><rect x="1170" y="150" width="330" height="290" rx="12" fill="#FFFFFF"/></g>
+  <text x="1194" y="180" font-size="13" font-weight="700" fill="#1E293B">Leyenda</text>
+  <line x1="1194" y1="192" x2="1470" y2="192" stroke="#E2E8F0" stroke-width="1"/>
+
+  <circle cx="1204" cy="216" r="9" fill="#7C3AED"/><text x="1222" y="220" font-size="12" fill="#334155">Frontend hosting (CloudFront + S3)</text>
+  <circle cx="1204" cy="244" r="9" fill="#DC2626"/><text x="1222" y="248" font-size="12" fill="#334155">Autenticación (Cognito)</text>
+  <circle cx="1204" cy="272" r="9" fill="#DB2777"/><text x="1222" y="276" font-size="12" fill="#334155">API Gateway / SNS</text>
+  <circle cx="1204" cy="300" r="9" fill="#EA580C"/><text x="1222" y="304" font-size="12" fill="#334155">Compute (Lambda)</text>
+  <circle cx="1204" cy="328" r="9" fill="#2563EB"/><text x="1222" y="332" font-size="12" fill="#334155">Datos (DynamoDB)</text>
+  <circle cx="1204" cy="356" r="9" fill="#0D9488"/><text x="1222" y="360" font-size="12" fill="#334155">Monitoreo (CloudWatch)</text>
+
+  <line x1="1194" y1="374" x2="1470" y2="374" stroke="#E2E8F0" stroke-width="1"/>
+  <line x1="1194" y1="394" x2="1224" y2="394" stroke="#334155" stroke-width="2"/>
+  <text x="1232" y="398" font-size="11.5" fill="#334155">Flujo síncrono (request/response)</text>
+  <line x1="1194" y1="416" x2="1224" y2="416" stroke="#94A3B8" stroke-width="1.6" stroke-dasharray="5,4"/>
+  <text x="1232" y="420" font-size="11.5" fill="#334155">Flujo asíncrono / observabilidad</text>
+
+  <!-- ===================================================================== -->
+  <!-- LANE 4 — MONITOREO & ALERTAS -->
+  <rect x="240" y="655" width="1300" height="270" rx="10" fill="#F0FDFA" stroke="#99F6E4" stroke-width="1.4"/>
+  <rect x="240" y="655" width="6" height="270" fill="#0D9488"/>
+  <text x="264" y="677" font-size="12.5" font-weight="700" fill="#0F766E" letter-spacing="0.4">MONITOREO &amp; ALERTAS</text>
+
+  <g filter="url(#softShadow)"><rect x="270" y="695" width="230" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="270" y="695" width="230" height="5" rx="2.5" fill="#0D9488"/>
+  <circle cx="300" cy="730" r="16" fill="#0D9488"/>
+  <text x="300" y="735" font-size="9.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">CW</text>
+  <text x="325" y="728" font-size="12.5" font-weight="700" fill="#1E293B">CloudWatch Logs</text>
+  <text x="300" y="760" font-size="11" fill="#64748B">Retención: 14 días</text>
+  <text x="300" y="775" font-size="11" fill="#64748B">5 log groups (1 por Lambda)</text>
+
+  <g filter="url(#softShadow)"><rect x="560" y="695" width="230" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="560" y="695" width="230" height="5" rx="2.5" fill="#0D9488"/>
+  <circle cx="590" cy="730" r="16" fill="#0D9488"/>
+  <text x="590" y="735" font-size="9.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">CW</text>
+  <text x="615" y="728" font-size="12.5" font-weight="700" fill="#1E293B">CloudWatch Alarms</text>
+  <text x="590" y="760" font-size="11" fill="#64748B">7 alarmas activas</text>
+  <text x="590" y="775" font-size="11" fill="#64748B">Errors · 5xx · Throttles</text>
+
+  <g filter="url(#softShadow)"><rect x="850" y="695" width="230" height="100" rx="10" fill="#FFFFFF"/></g>
+  <rect x="850" y="695" width="230" height="5" rx="2.5" fill="#0D9488"/>
+  <circle cx="880" cy="730" r="16" fill="#0D9488"/>
+  <text x="880" y="735" font-size="9.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">CW</text>
+  <text x="905" y="728" font-size="12.5" font-weight="700" fill="#1E293B">Dashboard</text>
+  <text x="880" y="760" font-size="11" fill="#64748B">4 widgets (métricas clave)</text>
+
+  <g filter="url(#softShadow)"><rect x="560" y="815" width="230" height="90" rx="10" fill="#FFFFFF"/></g>
+  <rect x="560" y="815" width="230" height="5" rx="2.5" fill="#DB2777"/>
+  <circle cx="590" cy="849" r="16" fill="#DB2777"/>
+  <text x="590" y="853" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">SNS</text>
+  <text x="615" y="846" font-size="12.5" font-weight="700" fill="#1E293B">SNS Topic</text>
+  <text x="590" y="877" font-size="11" fill="#64748B">tms-backend-alerts</text>
+
+  <!-- Email (external, outside AWS boundary) -->
+  <g filter="url(#cardShadow)"><rect x="1620" y="815" width="150" height="90" rx="10" fill="#334155"/></g>
+  <path d="M1640,838 h110 v44 h-110 z M1640,838 l55,32 l55,-32" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="1695" y="898" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">Email (fuera de AWS)</text>
+
+  <!-- ===================================================================== -->
+  <!-- ARROWS -->
+  <!-- Usuario -> CloudFront -->
+  <path d="M180,505 C230,505 230,215 270,215" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="178" y="243" width="58" height="20" rx="10" fill="#F8FAFC"/>
+  <text x="207" y="257" font-size="11" fill="#334155" text-anchor="middle">HTTPS</text>
+
+  <!-- CloudFront -> S3 -->
+  <path d="M500,215 L560,215" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="503" y="196" width="66" height="18" rx="9" fill="#F5F3FF"/>
+  <text x="536" y="209" font-size="10.5" fill="#334155" text-anchor="middle">OAC privado</text>
+
+  <!-- Usuario -> Cognito -->
+  <path d="M180,525 C225,525 225,385 270,385" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="182" y="415" width="88" height="20" rx="10" fill="#F8FAFC"/>
+  <text x="226" y="429" font-size="11" fill="#334155" text-anchor="middle">Login / Registro</text>
+
+  <!-- Cognito -> PostConfirmation -->
+  <path d="M520,385 L580,385" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="527" y="378" font-size="10" fill="#334155">trigger</text>
+
+  <!-- PostConfirmation -> DynamoDB -->
+  <path d="M810,375 C860,360 880,400 900,495" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="820" y="415" font-size="10" fill="#334155">PutItem (perfil)</text>
+
+  <!-- Usuario -> API GW -->
+  <path d="M180,555 C215,555 215,555 270,555" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="182" y="565" width="130" height="20" rx="10" fill="#F8FAFC"/>
+  <text x="247" y="579" font-size="11" fill="#334155" text-anchor="middle">HTTPS + JWT (Access Token)</text>
+
+  <!-- API GW -> CRUD Lambdas -->
+  <path d="M520,555 L580,555" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="524" y="548" font-size="10" fill="#334155">valida JWT</text>
+
+  <!-- CRUD Lambdas -> DynamoDB -->
+  <path d="M830,545 L890,540" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="835" y="532" font-size="10" fill="#334155">CRUD tareas</text>
+
+  <!-- PostConfirmation -> CloudWatch Logs -->
+  <path d="M650,435 C550,540 420,600 390,695" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+
+  <!-- CRUD Lambdas -> CloudWatch Logs -->
+  <path d="M650,615 C560,650 450,660 400,695" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <text x="470" y="668" font-size="10" fill="#64748B">logs</text>
+
+  <!-- CRUD Lambdas / API GW / DynamoDB -> CloudWatch Alarms -->
+  <path d="M700,615 C690,650 680,665 675,695" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <path d="M420,615 C480,655 560,670 590,695" fill="none" stroke="#94A3B8" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <path d="M990,625 C920,660 800,675 760,695" fill="none" stroke="#94A3B8" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <text x="700" y="660" font-size="10" fill="#64748B">métricas</text>
+
+  <!-- Logs -> Dashboard -->
+  <path d="M500,745 C650,745 720,745 850,745" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <!-- Alarms -> Dashboard -->
+  <path d="M790,745 L850,745" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-dashed)"/>
+  <text x="920" y="675" font-size="10" fill="#64748B">visualiza</text>
+
+  <!-- Alarms -> SNS -->
+  <path d="M675,795 L675,815" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="682" y="808" font-size="10" fill="#334155">ALARM state</text>
+
+  <!-- SNS -> Email -->
+  <path d="M790,858 C1100,858 1350,858 1620,858" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1150" y="838" width="90" height="20" rx="10" fill="#F8FAFC"/>
+  <text x="1195" y="852" font-size="11" fill="#334155" text-anchor="middle">notificación</text>
+
+  <text x="40" y="965" font-size="11" fill="#94A3B8">github.com/CristianAndres-Arteaga/task-management-system</text>
+</svg>
