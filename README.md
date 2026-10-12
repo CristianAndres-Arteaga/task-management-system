@@ -8,7 +8,7 @@
 
 A full-stack, serverless task management app built on AWS to practice production-grade cloud engineering patterns: least-privilege IAM, OIDC-based CI/CD, single-table DynamoDB design, and end-to-end observability — all kept within AWS's free tier.
 
-**Live demo:** https://d1n5bx4uzfv4qq.cloudfront.net
+**Status:** decommissioned in October 2026, when the AWS account's free plan ended — the live demo is no longer available. See the [screenshots](#features) and the [architecture diagram](#architecture).
 **Repo:** https://github.com/CristianAndres-Arteaga/task-management-system
 
 _[Versión en español](README.es.md)_
